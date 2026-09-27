@@ -1,0 +1,29 @@
+﻿# Variables de entorno y secretos
+.env
+
+# Entornos virtuales de Python
+venv/
+env/
+.venv/
+
+# Cache y compilados de Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Archivos temporales de audio (TTS)
+*.mp3
+*.wav
+
+# Checkpoints/modelos pesados (no deben ir al repo)
+adaption/*.tgz
+adaption/mayllo-best-checkpoint*
+*.safetensors
+
+# Archivos de configuración de editores
+.vscode/
+.idea/
+
+# Archivos del sistema operativo
+Thumbs.db
+.DS_Store
