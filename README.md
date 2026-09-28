@@ -7,7 +7,7 @@ MAYLLO is a personal multimodal AI assistant inspired by JARVIS, designed to run
 - **Text and voice conversation**, with a "brain" connected to Featherless AI (OpenAI-compatible API, open-source language models).
 - **Speech-to-text and text-to-speech**, with an echo effect applied to the voice to sound closer to JARVIS.
 - **Real function calling:** by voice or text, MAYLLO can open Spotify, VS Code, Word, Excel, PowerPoint and Google.
-- **Gesture control (computer vision):** using the camera and MediaPipe, a thumb-index pinch gesture triggers a zoom-out (`Ctrl -`), with distance normalization, moving-average smoothing, two-threshold hysteresis, time cooldown and level limits to avoid erratic behavior. It works reliably in VS Code and is still being tuned for other apps.
+- **Gesture control (computer vision):** using the camera and MediaPipe, hand gestures control the zoom of the active window: a thumb-index **pinch zooms in** (`Ctrl +`) and an **L-shaped hand zooms out** (`Ctrl -`). Each time the camera re-detects the pose, the zoom changes one step, so you show the pose, remove your fingers, and show it again. It uses distance normalization, moving-average smoothing, two-threshold hysteresis, time cooldown and level limits to avoid erratic behavior. It works reliably in VS Code and is still being tuned for other apps.
 - **Animated interface (Tkinter):** MAYLLO appears as a helmet-style icon in the corner of the screen, with a speech bubble showing the action it is executing.
 
 ## Technical research: custom LoRA model
