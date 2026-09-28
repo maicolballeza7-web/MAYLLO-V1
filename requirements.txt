@@ -8,5 +8,3 @@ pyautogui>=1.0.0
 SpeechRecognition>=3.10.0
 edge-tts>=7.0.0
 pygame>=2.5.2
-python "C:\Users\Conne\OneDrive\Documentos\MAYLLO-2.0\main.py" --ui
-python -m vision.hand_detector
