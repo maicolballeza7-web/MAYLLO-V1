@@ -1,101 +1,95 @@
 # MAYLLO 2.0
 
-MAYLLO es un asistente de IA multimodal personal, inspirado en JARVIS, pensado para
-correr en un entorno de escritorio ligero (Windows). Combina conversación por voz/texto,
-ejecución de acciones reales en la computadora, y control por gestos de mano.
+MAYLLO is a personal multimodal AI assistant inspired by JARVIS, designed to run on a lightweight Windows desktop. It combines voice/text conversation, real actions on your computer, and hand-gesture control. Built for **GIBC V2, Track 03: Open**.
 
-## Qué hace MAYLLO
+## What MAYLLO does
 
-- **Conversación por texto y voz**, con un "cerebro" conectado a Featherless AI
-  (API compatible con OpenAI, modelos de lenguaje open-source).
-- **Reconocimiento de voz (STT)** y **síntesis de voz (TTS)**, con un efecto de eco
-  aplicado a la voz para acercarla al sonido de JARVIS.
-- **Function calling real**: por voz o texto, MAYLLO puede abrir Spotify, VS Code,
-  Word, Excel, PowerPoint y realizar búsquedas en Google.
-- **Control gestual por visión computacional**: usando la cámara y MediaPipe, un
-  gesto de pellizco (pulgar-índice) controla el zoom de la aplicación activa
-  (`Ctrl +` / `Ctrl -`), con normalización de distancia, suavizado por promedio
-  móvil, histéresis de dos umbrales, cooldown de tiempo y límites de nivel para
-  evitar comportamiento errático.
-- **Interfaz visual animada** (Tkinter/CustomTkinter): MAYLLO aparece como un ícono
-  tipo casco en la esquina de la pantalla, con una burbuja que indica la acción que
-  está ejecutando.
+- **Text and voice conversation**, with a "brain" connected to Featherless AI (OpenAI-compatible API, open-source language models).
+- **Speech-to-text and text-to-speech**, with an echo effect applied to the voice to sound closer to JARVIS.
+- **Real function calling:** by voice or text, MAYLLO can open Spotify, VS Code, Word, Excel, PowerPoint and Google.
+- **Gesture control (computer vision):** using the camera and MediaPipe, a thumb-index pinch gesture triggers a zoom-out (`Ctrl -`), with distance normalization, moving-average smoothing, two-threshold hysteresis, time cooldown and level limits to avoid erratic behavior. It works reliably in VS Code and is still being tuned for other apps.
+- **Animated interface (Tkinter):** MAYLLO appears as a helmet-style icon in the corner of the screen, with a speech bubble showing the action it is executing.
 
-## Investigación técnica: modelo propio con LoRA
+## Technical research: custom LoRA model
 
-Como parte del proyecto, se entrenó un adaptador LoRA sobre Llama-3.1-8B-Instruct
-(con un dataset propio de 80 ejemplos curados a mano, vía Adaption Labs/AutoScientist),
-logrando un win rate de 0.76 contra el modelo base sin adaptar.
+As part of the project, a LoRA adapter was trained with Adaption Labs/AutoScientist using a hand-written dataset of 80 examples. The run on Llama-3.3-70B-Instruct reached a **0.76 win rate** against the unadapted base model. The dataset was then retrained on Llama-3.1-8B-Instruct to obtain a smaller adapter that could be served more easily.
 
-**Nota de transparencia:** este modelo entrenado NO está integrado en el runtime de
-producción de MAYLLO por limitaciones de infraestructura (no se cuenta con servidor
-propio para servirlo de forma persistente). El asistente en producción usa Featherless
-AI sin adaptar como cerebro. El checkpoint, el proceso de entrenamiento y las métricas
-de evaluación están documentados en `adaption/` como evidencia del trabajo técnico
-realizado.
+**Transparency note:** the trained model is **not** integrated into MAYLLO's production runtime, because there is no server available to host it. The running assistant uses Featherless AI without adaptation as its brain. The dataset, training scripts and evaluation are in `adaption/`. The LoRA checkpoint (~2.5 GB) is not included in the repository because of its size.
 
-## Estructura
+## Project structure
 
-- `main.py` — punto de entrada (modo texto o `--ui`).
-- `core/` — orquestación del asistente: `assistant.py` (flujo principal),
-  `intent.py` (detección de intención por palabras clave), `memory.py`
-  (memoria conversacional en RAM).
-- `ai/` — cliente de Featherless AI (`llm.py`) y construcción de prompts (`prompts.py`).
-- `voice/` — reconocimiento de voz (`speech_to_text.py`), síntesis de voz con efecto
-  de eco (`text_to_speech.py`).
-- `tools/` — ejecución de acciones reales: apertura de aplicaciones (`applications.py`),
-  navegador (`browser.py`), archivos (`files.py`).
-- `vision/` — detección de manos y gesto de pellizco/zoom (`hand_detector.py`,
-  `gestures.py`, `camera.py`).
-- `ui/` — interfaz gráfica animada con el personaje MAYLLO (`interface.py`).
-- `adaption/` — scripts de entrenamiento e investigación con Adaption Labs
-  (dataset, entrenamiento, evaluación); no forma parte del runtime principal.
+- `main.py`: entry point (text mode or `--ui`).
+- `core/`: assistant orchestration: `assistant.py` (main flow), `intent.py` (keyword-based intent detection), `memory.py` (in-RAM conversation memory).
+- `ai/`: Featherless AI client (`llm.py`) and prompt building (`prompts.py`).
+- `voice/`: speech recognition (`speech_to_text.py`) and speech synthesis with echo effect (`text_to_speech.py`).
+- `tools/`: real actions: opening applications (`applications.py`), browser (`browser.py`), files (`files.py`).
+- `vision/`: hand detection and pinch/zoom gesture (`hand_detector.py`, `gestures.py`, `camera.py`).
+- `ui/`: animated interface with the MAYLLO character (`interface.py`).
+- `adaption/`: dataset, training and evaluation scripts for the LoRA research; not part of the main runtime.
 
-## Instalación
+## Prerequisites
 
-Desde PowerShell, en la raíz del proyecto:
+- Windows
+- **Python 3.11**
+- Microphone and webcam
+- A Featherless AI API key
 
-```powershell
+## Installation
+
+From PowerShell, in the project root:
+
+```
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-## Configuración
+## Configuration
 
-Copia `.env.example` a `.env` y completa tu API key real de Featherless AI:
+Copy `.env.example` to `.env` and add your real Featherless AI API key:
 
-```powershell
+```
 copy .env.example .env
 ```
 
-## Ejecución
+## Usage
 
-**Chat por texto:**
-```powershell
+Text chat:
+
+```
 python main.py
 ```
 
-**Interfaz animada completa:**
-```powershell
+Full animated interface:
+
+```
 python main.py --ui
 ```
 
-**Control por gestos (visión), en una ventana aparte:**
-```powershell
+Gesture control (computer vision), in a separate window:
+
+```
 python -m vision.hand_detector
 ```
 
-## Generar ejecutable (opcional)
+Example commands (MAYLLO speaks Spanish): "abre Spotify", "abre Word", "abre VS Code".
 
-```powershell
+## Known limitations
+
+- The zoom gesture works reliably in VS Code; behavior in other applications is still being tuned.
+- The LoRA adapter is not connected to the running assistant (see the transparency note above).
+- Gesture control runs as a separate module and is not yet launched from the interface.
+
+## Build an executable (optional)
+
+```
 python -m pip install pyinstaller
 python -m PyInstaller --noconfirm --clean --windowed --name Mayllo main.py
 ```
 
-## Créditos y herramientas de IA usadas
+The executable does not include your `.env`; place it next to the `.exe` with your API key.
 
-Este proyecto fue construido usando GitHub Copilot y Claude (Anthropic) como
-asistentes de desarrollo, y Adaption Labs/AutoScientist para el entrenamiento
-del modelo LoRA experimental.
+## Credits and AI tools used
+
+This project was built using GitHub Copilot and Claude (Anthropic) as development assistants, and Adaption Labs/AutoScientist for training the experimental LoRA model.
