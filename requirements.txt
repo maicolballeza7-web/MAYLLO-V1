@@ -8,3 +8,4 @@ pyautogui>=0.9.50
 SpeechRecognition>=3.10.0
 edge-tts>=7.0.0
 pygame>=2.5.2
+PyAudio
